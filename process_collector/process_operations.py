@@ -2,7 +2,7 @@ import os
 import psutil
 import json
 
-from process_collector import time_operations
+from process_collector import utils
 
 
 def get_single_process_info(process):
@@ -30,9 +30,9 @@ def get_single_process_info(process):
     if exe:
         exe_stat = os.stat(exe)
         exe_info = {
-                    'create_time': time_operations.convert_to_iso8601(
+                    'create_time': utils.convert_to_iso8601(
                         exe_stat.st_ctime),
-                    'last_modified': time_operations.convert_to_iso8601(
+                    'last_modified': utils.convert_to_iso8601(
                         exe_stat.st_mtime),
                     'size': exe_stat.st_size
                    }
@@ -42,7 +42,7 @@ def get_single_process_info(process):
 
     process_info = {
             'username': username,
-            'process_create_time': time_operations.convert_to_iso8601(
+            'process_create_time': utils.convert_to_iso8601(
                 c_time),
             'exe_file': exe,
             'arguments': arguments,
@@ -72,7 +72,7 @@ def get_processes_info():
 
 
 def create_info_file():
-    curr_time = time_operations.get_current_time()
+    curr_time = utils.get_current_time()
     data = get_processes_info()
     with open('{}.json'.format(curr_time), "w+") as f:
         json.dump(data, f, indent=4)

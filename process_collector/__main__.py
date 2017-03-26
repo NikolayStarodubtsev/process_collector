@@ -1,9 +1,9 @@
-from process_collector import privilege_check
+from process_collector import utils
 from process_collector import process_operations
 
 
 def main():
-    privilege_check.privilege_check()
+    utils.privilege_check()
     process_operations.create_info_file()
 
 
