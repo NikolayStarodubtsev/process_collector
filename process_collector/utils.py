@@ -16,7 +16,8 @@ def privilege_check():
 
 
 def get_current_time():
-    return datetime.datetime.now().replace(microsecond=0).isoformat()
+    dt = datetime.datetime.now().replace(microsecond=0).isoformat()
+    return dt.replace(':', '-')
 
 
 def convert_to_iso8601(timestamp):
