@@ -6,10 +6,14 @@ from process_collector import utils
 
 
 def get_single_process_info(process):
-    username = process.username()
-    c_time = process.create_time()
-    exe = process.exe()
-    arguments = process.cmdline()
+    # NOTE: Do not get connections from as_dict, because we need to repack it.
+    process_info = process.as_dict(['username',
+                                    'create_time',
+                                    'exe',
+                                    'pid',
+                                    'cmdline',
+                                    'name'])
+
     open_ports = []
     for connection in process.connections():
         open_ports.append(connection.laddr)
@@ -27,8 +31,8 @@ def get_single_process_info(process):
 
     # FIXME: need to investigate why psutil.Process.exe() can return None and
     # rewrite properly.
-    if exe:
-        exe_stat = os.stat(exe)
+    if process_info['exe']:
+        exe_stat = os.stat(process_info['exe'])
         exe_info = {
                     'create_time': utils.convert_to_iso8601(
                         exe_stat.st_ctime),
@@ -37,37 +41,21 @@ def get_single_process_info(process):
                     'size': exe_stat.st_size
                    }
     else:
-        exe_stat = ''
         exe_info = {}
 
-    process_info = {
-            'username': username,
-            'process_create_time': utils.convert_to_iso8601(
-                c_time),
-            'exe_file': exe,
-            'arguments': arguments,
-            'open_ports': open_ports,
-            'children': children_list,
-            'exe_info': exe_info
-           }
+    process_info['exe_info'] = exe_info
+    process_info['open_ports'] = open_ports
+    process_info['create_time'] = utils.convert_to_iso8601(
+        process_info['create_time'])
+
     return process_info
 
 
 def get_processes_info():
-
-    pids = psutil.pids()
-    info = {}
-    for pid in pids:
-        try:
-            process = psutil.Process(pid)
-        except psutil.NoSuchProcess:
-            info[pid] = {
-                         'pid': pid,
-                         'status': 'gone'
-                        }
-            continue
+    info = []
+    for process in psutil.process_iter():
         process_info = get_single_process_info(process)
-        info[pid] = process_info
+        info.append(process_info)
     return info
 
 
