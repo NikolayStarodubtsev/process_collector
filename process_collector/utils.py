@@ -1,17 +1,18 @@
 import os
-import sys
 
+import ctypes
 import datetime
 
 
 def privilege_check():
+    non_admin = ('You do not have root privileges, so you will see only'
+                 'processes run under current user')
     if os.name == 'posix':
         if os.geteuid() != 0:
-            print('You do not have root privileges, so you will see only'
-                  'processes run under current user')
-    else:
-        print('This script works properly only on Linux systems')
-        sys.exit(1)
+            print(non_admin)
+    elif os.name == 'nt':
+        if not ctypes.windll.shell32.IsUserAnAdmin():
+            print(non_admin)
 
 
 def get_current_time():
