@@ -7,8 +7,8 @@ import datetime
 def privilege_check():
     if os.name == 'posix':
         if os.geteuid() != 0:
-            print('You need to have root privileges to run this script.')
-            sys.exit(1)
+            print('You do not have root privileges, so you will see only'
+                  'processes run under current user')
     else:
         print('This script works properly only on Linux systems')
         sys.exit(1)

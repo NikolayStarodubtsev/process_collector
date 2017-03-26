@@ -54,8 +54,11 @@ def get_single_process_info(process):
 def get_processes_info():
     info = []
     for process in psutil.process_iter():
-        process_info = get_single_process_info(process)
-        info.append(process_info)
+        try:
+            process_info = get_single_process_info(process)
+            info.append(process_info)
+        except psutil.AccessDenied:
+            pass
     return info
 
 
