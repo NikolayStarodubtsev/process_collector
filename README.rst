@@ -20,3 +20,16 @@ The following information about process is collected:
 * Children of this process.
 
 * Information about executable file.
+
+
+============
+Installation
+============
+
+On Linux you can simply install application from source with:
+
+.. code-block:: console
+    pip -e process_collector
+
+It works the same way on Windows, but you'll need to install
+VS2015 for Python 3.5+, or install `psutil` from precompiled file.
