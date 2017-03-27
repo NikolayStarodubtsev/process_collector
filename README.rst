@@ -28,7 +28,7 @@ Installation
 
 On Linux you can simply install application from source with:
 
-.. code-block:: console
+.. code-block::
     pip -e process_collector
 
 It works the same way on Windows, but you'll need to install
